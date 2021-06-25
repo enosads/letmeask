@@ -4,22 +4,49 @@ import logoImg from '../../../../public/images/logo.svg';
 import styles from './styles.module.scss'
 import Link from 'next/link'
 import {Button} from "../../../components/Button";
-import {useEffect} from "react";
-import {firebase} from "../../../services/firebase";
+import {FormEvent, useState} from "react";
+import {database} from "../../../services/firebase";
 import {useAuth} from "../../../hooks/useAuth";
+import Router from "next/router";
+import firebase from "firebase";
+import {toast, ToastContainer} from "react-toastify";
+
 
 export default function NewRoom() {
-    const {saveUserState} = useAuth();
-    useEffect(() => {
-        const unsubscribe = firebase.auth().onAuthStateChanged(user => {
-            saveUserState(user);
-        });
+    const {user} = useAuth();
 
-        return () => unsubscribe();
-    }, []);
+    const [roomName, setRoomName] = useState('');
+
+    async function handleCreateRoom(event: FormEvent) {
+        event.preventDefault();
+
+        verifyRoomNameIsNotEmpty()
+            .then(createNewRoomOnFirebase)
+            .then(navigateToCreatedRoom)
+            .catch(error => toast.error(error.message));
+
+        async function verifyRoomNameIsNotEmpty() {
+            if (roomName.trim() === '') {
+                throw Error('Nome da sala não informado');
+            }
+        }
+
+        async function createNewRoomOnFirebase(): Promise<firebase.database.ThenableReference> {
+            const roomRef = database.ref('rooms');
+            return roomRef.push({
+                title: roomName,
+                authorId: user?.id
+            });
+        }
+
+        async function navigateToCreatedRoom(roomRef: firebase.database.ThenableReference) {
+            await Router.push(`/rooms/${roomRef.key}`);
+        }
+    }
 
     return (
         <div className={styles.container}>
+            <ToastContainer autoClose={3000}/>
             <aside>
                 <Image
                     src={illustrationImg}
@@ -35,10 +62,12 @@ export default function NewRoom() {
                         alt="Letmeask"
                     />
                     <h2>Criar uma nova sala</h2>
-                    <form>
+                    <form onSubmit={handleCreateRoom}>
                         <input
                             type="text"
                             placeholder="Nome da sala"
+                            onChange={event => setRoomName(event.target.value)}
+                            value={roomName}
                         />
                         <Button type='submit'>
                             Criar sala

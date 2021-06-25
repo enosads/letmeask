@@ -20,5 +20,8 @@ if (!firebase.apps.length) {
     firebase.app(); // if already initialized, use that one
 }
 
+const auth = firebase.auth();
+const  database = firebase.database()
 
-export {firebase};
+
+export {firebase, auth, database};

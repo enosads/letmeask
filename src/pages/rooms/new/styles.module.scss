@@ -1,7 +1,9 @@
 .container {
+  background-color: var(--gray-50);
+  color: var(--gray-700);
+  height: 100vh;
   display: flex;
   align-items: stretch;
-  height: 100vh;
 
   aside {
     flex: 7;

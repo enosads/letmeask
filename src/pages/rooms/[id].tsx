@@ -8,6 +8,7 @@ import {FormEvent, useEffect, useState} from "react";
 import {toast, ToastContainer} from "react-toastify";
 import {useAuth} from "../../hooks/useAuth";
 import {database} from "../../services/firebase";
+import {useTheme} from "../../hooks/useTheme";
 
 
 type Question = {
@@ -29,11 +30,10 @@ export default function Room() {
     const [newQuestion, setNewQuestion] = useState('');
     const [questions, setQuestions] = useState<Question[]>([]);
     const [title, setTitle] = useState('');
+    const {theme} = useTheme();
 
     useEffect(() => {
         const roomRef = database.ref(`rooms/${roomId}`);
-        console.log(typeof NaN)
-
         roomRef.on('value', room => {
             const databaseRoom = room.val();
             const firebaseQuestions: FirebaseQuestions = databaseRoom.questions ?? {};
@@ -94,7 +94,7 @@ export default function Room() {
     }
 
     return (
-        <div className={styles.container}>
+        <div className={`${styles.container} ${theme}`}>
             <ToastContainer/>
             <header>
                 <div>

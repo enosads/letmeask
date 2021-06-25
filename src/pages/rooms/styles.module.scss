@@ -1,4 +1,9 @@
+
 .container {
+  background-color: var(--gray-50);
+  color: var(--gray-700);
+  height: 100vh;
+
   header {
     padding: 1.5rem;
     border-bottom: 1px solid var(--gray-100);

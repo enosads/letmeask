@@ -10,10 +10,12 @@ import {useAuth} from "../../../hooks/useAuth";
 import Router from "next/router";
 import firebase from "firebase";
 import {toast, ToastContainer} from "react-toastify";
+import {useTheme} from "../../../hooks/useTheme";
 
 
 export default function NewRoom() {
     const {user} = useAuth();
+    const {theme} = useTheme();
 
     const [roomName, setRoomName] = useState('');
 
@@ -45,7 +47,7 @@ export default function NewRoom() {
     }
 
     return (
-        <div className={styles.container}>
+        <div className={`${styles.container} ${theme}`}>
             <ToastContainer autoClose={3000}/>
             <aside>
                 <Image

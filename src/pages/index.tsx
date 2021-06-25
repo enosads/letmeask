@@ -9,11 +9,13 @@ import {useAuth} from "../hooks/useAuth";
 import {FormEvent, useState} from "react";
 import {toast, ToastContainer} from "react-toastify";
 import {database, firebase} from "../services/firebase";
+import {useTheme} from "../hooks/useTheme";
 
 
 export default function Home() {
     const {user, signInWithGoogle} = useAuth();
     const [roomCode, setRoomCode] = useState('');
+    const {theme, toggleTheme} = useTheme();
 
     async function handleCreateRoom() {
         checkAuthentication()
@@ -59,7 +61,7 @@ export default function Home() {
     }
 
     return (
-        <div className={styles.container}>
+        <div className={`${styles.container} ${theme}`}>
             <ToastContainer autoClose={3000}/>
             <aside>
                 <Image

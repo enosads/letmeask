@@ -14,10 +14,15 @@ interface ThemeContextProviderProps {
 }
 
 export function ThemeProvider(props: ThemeContextProviderProps) {
-    const [currentTheme, setCurrentTheme] = useState<Theme>('dark');
+    const [currentTheme, setCurrentTheme] = useState<Theme>(() => {
+        const storagedTheme = localStorage.getItem('theme');
+        return (storagedTheme ?? 'light') as Theme;
+    });
 
     function toggleTheme() {
-        setCurrentTheme(currentTheme === 'light' ? 'dark' : 'light');
+        const theme = currentTheme === 'light' ? 'dark' : 'light';
+        setCurrentTheme(theme);
+        localStorage.setItem('theme', theme);
     }
 
     return (
